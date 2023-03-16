@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% load static %}
+<style>
+
+</style>
+{% block content %}
+    <img class="align-center" src="/QR/{{ name }}.png" height="500" width="500">
+    <a href="{% url 'home' %}">Назад</a>
+{% endblock %}

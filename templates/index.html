@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+<style>
+    a.style {
+        border-right-width: 10px;
+        margin-right: 10px;
+        padding-right: 0px;
+        margin-left: 0px;
+}
+</style>
+{% block content %}
+    <form method="post">
+    {% csrf_token %}
+    {% if request.user.is_authenticated %}
+        <p>User: {{ user.username }}</p>
+        <div class="align-center">
+            <a href="{% url 'logout' %}">LogOut</a>
+            <a href="{% url 'settings' %}">Settings</a>
+            <a href="{% url 'CreateClient' %}">Create client</a>
+        </div>
+        {% for i in form %}
+            <div class="column" style="background-color:#aaa;">
+                <div>
+                    <p>Client name: {{ i.name }}</p>
+                    <p>Client ip: {{ i.Address }}</p>
+                    <div class="style">
+                        <a class="style" href="{% url 'delete' i.name %}">Delete</a>
+                        <a class="style" href="{% url 'showQR' i.name %}">QR code</a>
+                        <a class="style" href="{% url 'download' i.name %}">Config</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <a href='{% url 'login' %}'>Войти</a>
+    {% endif %}
+    </form>
+{% endblock %}

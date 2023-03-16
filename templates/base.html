@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MikroTik WG WebManager</title>
+</head>
+<style>
+    .testStyle {
+margin-left: auto;
+margin-right: auto;
+width: 6em
+}
+* {
+    box-sizing: border-box;
+}
+/* Create three equal columns that floats next to each other */
+.column {
+    float: left;
+    width: 18%;
+    padding: 10px;
+    margin: 0px 10px 10px 0px;
+    margin-outside: 10px;
+    height: 140px; /* Should be removed. Only for demonstration */
+}
+{#/* Clear floats after the columns */#}
+{#.row:after {#}
+{#    content: "";#}
+{#    display: table;#}
+{#    clear: both;#}
+{#}#}
+{#/* Responsive layout - makes the three columns stack on top of each other instead of next to each other */#}
+{#@media screen and (max-width: 600px) {#}
+{#    .column {#}
+{#        width: 100%;#}
+{#    }#}
+{#}#}
+</style>
+{#{% if request.user.is_authenticated %}#}
+{#        <p>User: {{ user.username }}</p>#}
+{#        <a href="{% url 'logout' %}">LogOut</a>#}
+{#        <a href="{% url 'settings' %}">Settings</a>#}
+{#        <a href="{% url 'CreateClient' %}">Create client</a>#}
+{#{% else %}#}
+{#    <a href='{% url 'login' %}'>Войти</a>#}
+{#{% endif %}#}
+
+{% block content %}
+
+{% endblock %}
+
+</html>

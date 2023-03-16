@@ -1,0 +1,26 @@
+<head>
+    <title>Вход</title>
+</head>
+<style>
+    div.field {
+  padding-bottom: 5px;
+}
+div.field label {
+  display: block;
+  float: left;
+  width: 70px;
+  height: 15px;
+}
+</style>
+{% block content %}
+    <form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+        <div class="field">
+            {{ form.username }}
+            </div>
+        <div class="field">
+            {{ form.password }}
+        </div>
+        <button type="submit">Вход</button>
+    </form>
+{% endblock %}
