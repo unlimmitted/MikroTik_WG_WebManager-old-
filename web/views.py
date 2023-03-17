@@ -116,7 +116,7 @@ def showQR(request, name):
 
 
 def download(request, name):
-    filename = fr"{os.path.dirname(os.path.dirname(__file__))}\web\configs\{name}.conf"
+    filename = fr"{os.path.dirname(os.path.dirname(__file__))}/web/configs/{name}.conf"
     response = FileResponse(open(filename, 'rb'))
     return response
 
