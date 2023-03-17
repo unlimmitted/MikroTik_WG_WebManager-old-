@@ -141,32 +141,33 @@ def create_client(request):
     form = AddClient(request.POST)
     if form.is_valid():
         api = connection()
-        client_data = form.save(commit=False)
-        client_key = pywgkey.WgKey()
+        name = form.cleaned_data.get('name')
         with open('settings.json') as json_file:
             data = json.load(json_file)
             for p in data['settings']:
                 network = p['network']
         formating_network = (network.split('/')[0])[:-1]
         new_ip = formating_network + str(get_max_ip(api)) + '/' + (network.split('/'))[1]
-        with open('settings.json') as settings:
-            list_address_num = api.get_resource('/interface/wireguard/peers')
-            data = json.load(settings)
-            for p in data['settings']:
-                client_data.DNS = p['DNS']
-                client_data.Endpoint = p['end_point']
-                client_data.MTU = p['MTU']
-            client_data.Address = new_ip
-            client_data.AllowedIPs = '0.0.0.0/0'
-            name = form.cleaned_data.get('name')
-            client_data.PrivateKey = str(client_key.privkey)
-            client_data.PublicKey = str(client_key.pubkey)
-            client_data.PersistentKeepalive = '30'
-            client_data.save()
         get_client_name = api.get_resource('/interface/wireguard/peers').get(comment=name)
         if get_client_name:
-            return redirect('home')
+            error = f'Client named "{name}" already exists'
+            return render(request, 'error_view.html', context={'error': error})
         else:
+            client_data = form.save(commit=False)
+            client_key = pywgkey.WgKey()
+            with open('settings.json') as settings:
+                list_address_num = api.get_resource('/interface/wireguard/peers')
+                data = json.load(settings)
+                for p in data['settings']:
+                    client_data.DNS = p['DNS']
+                    client_data.Endpoint = p['end_point']
+                    client_data.MTU = p['MTU']
+                client_data.Address = new_ip
+                client_data.AllowedIPs = '0.0.0.0/0'
+                client_data.PrivateKey = str(client_key.privkey)
+                client_data.PublicKey = str(client_key.pubkey)
+                client_data.PersistentKeepalive = '30'
+                client_data.save()
             list_address_num.add(interface=get_interface_from_settings(),
                                  comment=f"{name}",
                                  public_key=client_key.pubkey,
