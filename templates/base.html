@@ -13,36 +13,24 @@ width: 6em
 * {
     box-sizing: border-box;
 }
-/* Create three equal columns that floats next to each other */
-.column {
-    float: left;
-    width: 18%;
-    padding: 10px;
-    margin: 0px 10px 10px 0px;
-    margin-outside: 10px;
-    height: 140px; /* Should be removed. Only for demonstration */
+    .navigation{
+        margin: 10px 0px 0px 10px;
+        border-radius: 10px;
+        width: 140px;
+        float: left;
+        height: 140px;
+        background-color: #DCDCDC;
+    }
+    .column {
+        border-radius: 10px;
+        float: left;
+        width: 180px;
+        padding: 10px;
+        margin: 10px 10px 10px 10px;
+        margin-outside: 10px;
+        height: 140px;
 }
-{#/* Clear floats after the columns */#}
-{#.row:after {#}
-{#    content: "";#}
-{#    display: table;#}
-{#    clear: both;#}
-{#}#}
-{#/* Responsive layout - makes the three columns stack on top of each other instead of next to each other */#}
-{#@media screen and (max-width: 600px) {#}
-{#    .column {#}
-{#        width: 100%;#}
-{#    }#}
-{#}#}
 </style>
-{#{% if request.user.is_authenticated %}#}
-{#        <p>User: {{ user.username }}</p>#}
-{#        <a href="{% url 'logout' %}">LogOut</a>#}
-{#        <a href="{% url 'settings' %}">Settings</a>#}
-{#        <a href="{% url 'CreateClient' %}">Create client</a>#}
-{#{% else %}#}
-{#    <a href='{% url 'login' %}'>Войти</a>#}
-{#{% endif %}#}
 
 {% block content %}
 

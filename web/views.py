@@ -14,9 +14,6 @@ from web.forms import *
 from web.utils import DataMixin
 
 
-# Create your views here.
-
-
 def connection():
     with open('settings.json') as json_file:
         data = json.load(json_file)
@@ -81,7 +78,7 @@ def dashboard(request):
     form = ClientList.objects.all()
     return render(request, 'index.html', context={'form': form})
 
-
+##Update MikroTik connection info in 'settings.json'
 def settings(request):
     form = ConSettings(request.POST)
     if form.is_valid():
@@ -110,11 +107,11 @@ def logout_user(request):
     logout(request)
     return redirect('login')
 
-
+##Page with QR code
 def showQR(request, name):
     return render(request, 'showQR.html', context={'name': name})
 
-
+##Download config file
 def download(request, name):
     filename = fr"{os.path.dirname(os.path.dirname(__file__))}/web/configs/{name}.conf"
     response = FileResponse(open(filename, 'rb'))
@@ -122,16 +119,21 @@ def download(request, name):
 
 
 def delete(request, name):
+    #Delete on MikroTik
     api = connection()
     list_get = api.get_resource('/interface/wireguard/peers')
     get_id = list_get.get(comment=name)[0].get('id')
     list_get.remove(id=get_id)
+
+    #Delete config's file
     config_path = os.path.join(os.path.abspath(os.path.dirname(__file__)),
                                fr'configs\{name}.conf')
     QR_path = os.path.join(os.path.abspath(os.path.dirname(__file__)),
                            fr'QR\{name}.png')
     os.remove(config_path)
     os.remove(QR_path)
+    
+    #Delete client in DB
     form = ClientList.objects.get(name=name)
     form.delete()
     return redirect('home')
@@ -142,21 +144,28 @@ def create_client(request):
     if form.is_valid():
         api = connection()
         name = form.cleaned_data.get('name')
+
+        #Get new ip
         with open('settings.json') as json_file:
             data = json.load(json_file)
             for p in data['settings']:
                 network = p['network']
         formating_network = (network.split('/')[0])[:-1]
         new_ip = formating_network + str(get_max_ip(api)) + '/' + (network.split('/'))[1]
+
         get_client_name = api.get_resource('/interface/wireguard/peers').get(comment=name)
         if get_client_name:
+            
+            #Send error
             error = f'Client named "{name}" already exists'
             return render(request, 'error_view.html', context={'error': error})
         else:
             client_data = form.save(commit=False)
             client_key = pywgkey.WgKey()
+            list_address_num = api.get_resource('/interface/wireguard/peers')
+
+            #Save in DB
             with open('settings.json') as settings:
-                list_address_num = api.get_resource('/interface/wireguard/peers')
                 data = json.load(settings)
                 for p in data['settings']:
                     client_data.DNS = p['DNS']
@@ -168,11 +177,15 @@ def create_client(request):
                 client_data.PublicKey = str(client_key.pubkey)
                 client_data.PersistentKeepalive = '30'
                 client_data.save()
+
+            #Send new client data on MikroTik
             list_address_num.add(interface=get_interface_from_settings(),
                                  comment=f"{name}",
                                  public_key=client_key.pubkey,
                                  allowed_address=new_ip,
                                  persistent_keepalive='00:00:20')
+            
+            #Create config & QR code
             with open('settings.json') as settings:
                 data = json.load(settings)
                 for p in data['settings']:

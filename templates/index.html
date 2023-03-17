@@ -11,21 +11,20 @@
     <form method="post">
     {% csrf_token %}
     {% if request.user.is_authenticated %}
-        <p>User: {{ user.username }}</p>
-        <div class="align-center">
-            <a href="{% url 'logout' %}">LogOut</a>
-            <a href="{% url 'settings' %}">Settings</a>
-            <a href="{% url 'CreateClient' %}">Create client</a>
+        <div class="navigation" style="float: left">
+            <a style="margin-bottom: 50px; margin-left: 10px; margin-right: 10px; font-size: 22px; color: black" href="{% url 'logout' %}">LogOut</a>
+            <a style="margin-bottom: 50px; margin-left: 10px; margin-right: 10px; font-size: 22px; color: black" href="{% url 'settings' %}">Settings</a>
+            <a style="margin-left: 10px; margin-right: 10px; font-size: 22px; color: black" href="{% url 'CreateClient' %}">Create client</a>
         </div>
         {% for i in form %}
-            <div class="column" style="background-color:#aaa;">
+            <div class="column" style="background-color:#DCDCDC;">
                 <div>
                     <p>Client name: {{ i.name }}</p>
                     <p>Client ip: {{ i.Address }}</p>
                     <div class="style">
-                        <a class="style" href="{% url 'delete' i.name %}">Delete</a>
-                        <a class="style" href="{% url 'showQR' i.name %}">QR code</a>
-                        <a class="style" href="{% url 'download' i.name %}">Config</a>
+                        <a class="style" style="color: black" href="{% url 'delete' i.name %}">Delete</a>
+                        <a class="style" style="color: black" href="{% url 'showQR' i.name %}">QR code</a>
+                        <a class="style" style="color: black" href="{% url 'download' i.name %}">Config</a>
                     </div>
                 </div>
             </div>

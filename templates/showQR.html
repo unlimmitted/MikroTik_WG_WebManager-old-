@@ -1,9 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
-<style>
-
-</style>
 {% block content %}
-    <img class="align-center" src="/QR/{{ name }}.png" height="500" width="500">
-    <a href="{% url 'home' %}">Back</a>
+    {% if request.user.is_authenticated %}
+        <div style=" margin-left: 30%; width: 40%;  padding: 10px;">
+            <img src="/QR/{{ name }}.png" height="400" width="400">
+        </div>
+        <div style=" margin-left: 30%; width: 40%;  padding: 10px;">
+            <a href="{% url 'home' %}">Back</a>
+        </div>
+    {% else %}
+        <a href='{% url 'login' %}'>Войти</a>
+    {% endif %}
 {% endblock %}
