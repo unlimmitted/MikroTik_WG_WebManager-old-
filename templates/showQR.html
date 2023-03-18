@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
-{% load static %}
 {% block content %}
     {% if request.user.is_authenticated %}
-        <div style=" margin-left: 30%; width: 40%;  padding: 10px;">
+        <h1 style=" margin-left: 43%; width: 40%"> Client {{ name }} QR code</h1>
+        <div style=" margin-left: 43%; width: 40%">
             <img src="/QR/{{ name }}.png" height="400" width="400">
         </div>
-        <div style=" margin-left: 30%; width: 40%;  padding: 10px;">
-            <a href="{% url 'home' %}">Back</a>
+        <div style=" margin-left: 43%; width: 40%;">
+            <a href="{% url 'home' %}" style="font-size: 22px; color: black">Back</a>
         </div>
     {% else %}
-        <a href='{% url 'login' %}'>Войти</a>
+        <a href='{% url 'login' %}' style="font-size: 22px; color: black">Войти</a>
     {% endif %}
 {% endblock %}

@@ -12,18 +12,18 @@ class LoginUserForm(AuthenticationForm):
 
 class ConSettings(forms.Form):
     Hostname = forms.CharField(label='Hostname', required=False,
-                               widget=forms.TextInput(attrs={'placeholder': 'Hostname'}))
-    Login = forms.CharField(label='Login', required=False, widget=forms.TextInput(attrs={'placeholder': 'Login'}))
+                               widget=forms.TextInput(attrs={'placeholder': ''}))
+    Login = forms.CharField(label='Login', required=False, widget=forms.TextInput(attrs={'placeholder': ''}))
     Password = forms.CharField(label='Password', required=False,
-                               widget=forms.TextInput(attrs={'placeholder': 'Password'}))
+                               widget=forms.TextInput(attrs={'placeholder': ''}))
     Endpoint = forms.CharField(label='Endpoint', required=False,
-                               widget=forms.TextInput(attrs={'placeholder': 'Endpoint'}))
-    MTU = forms.CharField(label='MTU', required=False, widget=forms.TextInput(attrs={'placeholder': 'MTU'}))
+                               widget=forms.TextInput(attrs={'placeholder': ''}))
+    MTU = forms.CharField(label='MTU', required=False, widget=forms.TextInput(attrs={'placeholder': ''}))
     Allowed_addr = forms.CharField(label='Allowed_addr', required=False,
-                                   widget=forms.TextInput(attrs={'placeholder': 'Allowed_addr'}))
-    DNS = forms.CharField(label='DNS', required=False, widget=forms.TextInput(attrs={'placeholder': 'DNS'}))
+                                   widget=forms.TextInput(attrs={'placeholder': ''}))
+    DNS = forms.CharField(label='DNS', required=False, widget=forms.TextInput(attrs={'placeholder': ''}))
     Interface = forms.CharField(label='Interface', required=False,
-                                widget=forms.TextInput(attrs={'placeholder': 'Interface'}))
+                                widget=forms.TextInput(attrs={'placeholder': ''}))
 
 
 class AddClient(forms.ModelForm):

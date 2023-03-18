@@ -1,6 +1,5 @@
 import json
 import os
-
 import pywgkey
 import qrcode
 import routeros_api
@@ -78,6 +77,7 @@ def dashboard(request):
     form = ClientList.objects.all()
     return render(request, 'index.html', context={'form': form})
 
+
 ##Update MikroTik connection info in 'settings.json'
 def settings(request):
     form = ConSettings(request.POST)
@@ -100,16 +100,33 @@ def settings(request):
                 json.dump(data, outfile, indent=2)
             return redirect('home')
         else:
-            return render(request, 'settings.html', context={'form': form})
+            with open('settings.json') as json_file:
+                data = json.load(json_file)
+                for p in data['settings']:
+                    end_point = p['end_point']
+                    login = p['login']
+                    passwd = p['password']
+                    network = p['network']
+                    DNS = p['DNS']
+                    MTU = p['MTU']
+                    Interface = p['Interface']
+                    address = p['address']
+            return render(request, 'settings.html', context={'form': form,
+                                                             'Hostname': address,
+                                                             'Login': login, 'Password': passwd,
+                                                             'DNS': DNS, 'MTU': MTU,
+                                                             'Interface': Interface, 'Endpoint': end_point})
 
 
 def logout_user(request):
     logout(request)
     return redirect('login')
 
+
 ##Page with QR code
 def showQR(request, name):
     return render(request, 'showQR.html', context={'name': name})
+
 
 ##Download config file
 def download(request, name):
@@ -119,21 +136,21 @@ def download(request, name):
 
 
 def delete(request, name):
-    #Delete on MikroTik
+    # Delete on MikroTik
     api = connection()
     list_get = api.get_resource('/interface/wireguard/peers')
     get_id = list_get.get(comment=name)[0].get('id')
     list_get.remove(id=get_id)
 
-    #Delete config's file
+    # Delete config's file
     config_path = os.path.join(os.path.abspath(os.path.dirname(__file__)),
                                fr'configs\{name}.conf')
     QR_path = os.path.join(os.path.abspath(os.path.dirname(__file__)),
                            fr'QR\{name}.png')
     os.remove(config_path)
     os.remove(QR_path)
-    
-    #Delete client in DB
+
+    # Delete client in DB
     form = ClientList.objects.get(name=name)
     form.delete()
     return redirect('home')
@@ -145,7 +162,7 @@ def create_client(request):
         api = connection()
         name = form.cleaned_data.get('name')
 
-        #Get new ip
+        # Get new ip
         with open('settings.json') as json_file:
             data = json.load(json_file)
             for p in data['settings']:
@@ -155,8 +172,8 @@ def create_client(request):
 
         get_client_name = api.get_resource('/interface/wireguard/peers').get(comment=name)
         if get_client_name:
-            
-            #Send error
+
+            # Send error
             error = f'Client named "{name}" already exists'
             return render(request, 'error_view.html', context={'error': error})
         else:
@@ -164,7 +181,7 @@ def create_client(request):
             client_key = pywgkey.WgKey()
             list_address_num = api.get_resource('/interface/wireguard/peers')
 
-            #Save in DB
+            # Save in DB
             with open('settings.json') as settings:
                 data = json.load(settings)
                 for p in data['settings']:
@@ -178,14 +195,14 @@ def create_client(request):
                 client_data.PersistentKeepalive = '30'
                 client_data.save()
 
-            #Send new client data on MikroTik
+            # Send new client data on MikroTik
             list_address_num.add(interface=get_interface_from_settings(),
                                  comment=f"{name}",
                                  public_key=client_key.pubkey,
                                  allowed_address=new_ip,
                                  persistent_keepalive='00:00:20')
-            
-            #Create config & QR code
+
+            # Create config & QR code
             with open('settings.json') as settings:
                 data = json.load(settings)
                 for p in data['settings']:

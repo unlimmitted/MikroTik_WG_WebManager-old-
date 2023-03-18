@@ -22,13 +22,40 @@ width: 6em
         background-color: #DCDCDC;
     }
     .column {
+        margin-left: 30%;
         border-radius: 10px;
         float: left;
-        width: 180px;
+        width: 99%;
         padding: 10px;
         margin: 10px 10px 10px 10px;
-        margin-outside: 10px;
-        height: 140px;
+        height: 100%;
+}
+    .flex {
+   display: flex;
+   justify-content: space-between;
+}
+    .textcols {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	width: 100%;
+}
+.textcols-item {
+	display: flex;
+	flex-direction: column;
+	flex-basis: 100%;
+	flex: 1;
+	height: 30%;
+	background: #fff2e1;
+}
+.textcols-item + .textcols-item {
+	margin-left: 5%;
+}
+    th, td {
+  /* Внутренний отступ и размер ячеек */
+  padding: 5px;
+  width: 200px;
+  height: 60px;
 }
 </style>
 

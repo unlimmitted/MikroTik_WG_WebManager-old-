@@ -15,12 +15,14 @@ div.field label {
 {% block content %}
     <form method="post" action="{% url 'login' %}">
     {% csrf_token %}
-        <div class="field">
+        <div class="flex" style="margin-left: 43%; width: 40%">
             {{ form.username }}
             </div>
-        <div class="field">
+        <div class="flex" style="margin-left: 43%; width: 40%;">
             {{ form.password }}
         </div>
-        <button type="submit">Вход</button>
+        <div class="flex" style="margin-left: 43%; width: 40%">
+            <button type="submit">Вход</button>
+        </div>
     </form>
 {% endblock %}
