@@ -3,13 +3,10 @@
 
 Run in project directory
 ```cpp
-python manage.py makemigration
+sudo docker-compose build
 ```
 ```cpp
-python manage.py migrate
-```
-```cpp
-python manage.py createsuperuser
+python manage.py createsuperuser 
 ```
 ```cpp
 sudo docker-compose up -d
