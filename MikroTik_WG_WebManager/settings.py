@@ -77,12 +77,8 @@ WSGI_APPLICATION = 'MikroTik_WG_WebManager.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'admin',
-        'PASSWORD': '12345',
-        'HOST': '192.168.0.13',
-        'PORT': '',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'sqlite',
     }
 }
 
