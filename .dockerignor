@@ -1,0 +1,4 @@
+touch .dockerignore
+echo "db.sqlite" >> .dockerignore
+echo ".venv" >> .dockerignore
+echo "__pycache__" >> .dockerignore

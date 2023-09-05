@@ -68,13 +68,13 @@ class MikroTik:
             
             template = f"""
             [Interface]
-            PrivateKey = {self.get_server_public_key()}
+            PrivateKey = {self.client_key.privkey}
             Address = {self.new_ip}
             DNS = {self.get_all_options().DNS}
             MTU = {self.get_all_options().MTU}
 
             [Peer]
-            PublicKey = {self.client_key.privkey}
+            PublicKey = {self.get_server_public_key()}
             AllowedIPs = 0.0.0.0/0
             Endpoint = {self.get_all_options().Endpoint}
             PersistentKeepalive = 30
