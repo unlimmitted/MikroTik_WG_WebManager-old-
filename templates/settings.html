@@ -1,46 +1,24 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <form method="post" action="{% url 'settings' %}">
-    {% csrf_token %}
-        {% if request.user.is_authenticated %}
-            <h1>MikroTik connection data</h1>
-            <div class="flex">
-                {{ form.as_p }}
-            </div>
-            <button type="submit" style="margin-right: 10px">Save</button>
-            <a href="{% url 'home' %}" style="font-size: 22px; color: black;">Back</a>
-            <h1>Saved settings:</h1>
-            <div class="flex">
-            <ul style="font-size: 22px">
-                <li>
-                    Hostname: {{ Hostname }}
-                </li>
-                <li>
-                    Login: {{ Login }}
-                </li>
-                <li>
-                    Password: {{ Password }}
-                </li>
-                <li>
-                    Endpoint: {{ Endpoint }}
-                </li>
-                <li>
-                    MTU: {{ MTU }}
-                </li>
-                <li>
-                    Allowed_addr: {{ Allowed_addr }}
-                </li>
-                <li>
-                    DNS: {{ DNS }}
-                </li>
-                <li>
-                    Interface: {{ Interface }}
-                </li>
-            </ul>
-            </div>
-        {% else %}
-            <a href='{% url 'login' %}'>Войти</a>
-        {% endif %}
+<div class="popup">
+    <h2>Add connection settings:</h2>
+    <div class="content">
+    <form method="POST">
+        {% csrf_token %}
+        <ul style="font-size: 20px">
+            <li>Hostname: {{ settings_form.Host }}</li>
+            <li>Username: {{ settings_form.Username }}</li>
+            <li>Password: {{ settings_form.Password }}</li>
+            <li>Endpoint: {{ settings_form.Endpoint }}</li>
+            <li>MTU: {{ settings_form.MTU }}</li>
+            <li>Network: {{ settings_form.Network }}</li>
+            <li>DNS: {{ settings_form.DNS }}</li>
+            <li>Interface: {{ settings_form.Interface }}</li>
+        </ul>
+        <button class="button" type="submit">Save</button>
     </form>
+    </div>
+    </div>
+</div>
 {% endblock %}

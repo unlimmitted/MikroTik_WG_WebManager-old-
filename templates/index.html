@@ -1,46 +1,97 @@
 {% extends 'base.html' %}
-<style>
-    a.style {
-        border-right-width: 10px;
-        margin-right: 10px;
-        padding-right: 0px;
-        margin-left: 0px;
-}
-</style>
+
 {% block content %}
+<div id='header' class="flex">
+    <center>
+    <form method="post">
+        <div class='create_box'>
+        {% csrf_token %}
+        {{ create_client_form.name }}
+        <button class="button" type='submit'>Create</button>
+        </div>
+    </form>
+    </center>
+</div>
     <form method="post">
     {% csrf_token %}
-    {% if request.user.is_authenticated %}
-        <div class="flex">
-            <a style="margin-left: 10px; margin-right: 10px; font-size: 22px; color: black" href="{% url 'CreateClient' %}">Create client</a>
-            <a style="margin-left: 10px; margin-right: 10px; font-size: 22px; color: black" href="{% url 'settings' %}">Settings</a>
-            <a style="margin-left: 10px; margin-right: 10px; font-size: 22px; color: black" href="{% url 'logout' %}">LogOut</a>
+        {% for i in objects %}
+        <div id='menu'>
+            <ul>
+              <li><a class='nav_btn' href="#{{ i.name }}">{{ i.name }}</a></li>
+            </ul>
         </div>
-        {% for i in form %}
-            <div class="column" style="background-color:#DCDCDC;">
-                <div class="flex">
-                    <table>
-                        <tr>
-                            <td><p style="font-size: 20px">Client name: {{ i.name }}</p></td>
-                        </tr>
-                    </table>
-                    <table>
-                        <tr>
-                            <td><p style="font-size: 20px">Client ip: {{ i.Address }}</p></td>
-                        </tr>
-                    </table>
-                    <div>
-                        <ul>
-                            <li><a style="color: black; font-size: 22px" href="{% url 'delete' i.name %}">Delete</a></li>
-                            <li><a style="color: black; font-size: 22px" href="{% url 'showQR' i.name %}">QR code</a></li>
-                            <li><a style="color: black; font-size: 22px" href="{% url 'download' i.name %}">Config</a></li>
-                        </ul>
-                    </div>
+        <div id='content'>
+            <div id='{{ i.name }}' class="overlay_content">
+                <div class='column1'>
+                    <img src="/QR/{{ i.name }}.png" height="500" width="500">
+                    <a class="button" style="padding: 12px 130px;" href="{% url 'download' i.name %}">Download config</a>
+                    <a class="del_button" href="{% url 'delete' i.name %}">Delete</a>
+                </div>
+                <div class='column2'>
+                    <h2>{{i.name}}</h2>
+                    <p>[Interface]</p>
+                    <p>PrivateKey={{i.PrivateKey}}</p>
+                    <p>Address={{ i.Address }}</p>
+                    <p>DNS={{i.DNS}}</p>
+                    <p>MTU={{i.MTU}}</p>
+                    <p></p>
+                    <p>[Peer]</p>
+                    <p>PublicKey={{i.PublicKey}}</p>
+                    <p>AllowedIPs=0.0.0.0/0</p>
+                    <p>Endpoint={{i.Endpoint}}</p>
+                    <p>PersistentKeepalive=30</p>
                 </div>
             </div>
+        </div>
         {% endfor %}
-    {% else %}
-        <a href='{% url 'login' %}'>Войти</a>
-    {% endif %}
     </form>
+    <div id='menu'>
+        <ul>
+            <li><a class="service_btn" href="#showsettings">Settings</a></li>
+            <li><a class="service_btn" href="{% url 'logout' %}">LogOut</a></li>
+        </ul>
+    </div>
+    <div id="showsettings" class="overlay">
+        <div class="popup">
+            <h2>Saved settings:</h2>
+            <a class="close" href="#">&times;</a>
+            <div class="content">
+            <ul style="font-size: 20px">
+                <li>Hostname: {{ Hostname }}</li>
+                <li>Username: {{ Login }}</li>
+                <li>Password: {{ Password }}</li>
+                <li>Endpoint: {{ Endpoint }}</li>
+                <li>MTU: {{ MTU }}</li>
+                <li>Network: {{ Allowed_addr }}</li>
+                <li>DNS: {{ DNS }}</li>
+                <li>Interface: {{ Interface }}</li>
+            </ul>
+            <a style="color: black; font-size: 22px" href="#settings-form">Edit</a>
+            </div>
+            </div>
+        </div>
+    </div>
+    <div id="settings-form" class="overlay">
+        <div class="popup">
+            <h2>Edit settings:</h2>
+            <a class="close" href="#showsettings">&times;</a>
+            <div class="content">
+            <form method="POST">
+                {% csrf_token %}
+                <ul style="font-size: 20px">
+                    <li>Hostname: {{ settings_form.Host }}</li>
+                    <li>Username: {{ settings_form.Username }}</li>
+                    <li>Password: {{ settings_form.Password }}</li>
+                    <li>Endpoint: {{ settings_form.Endpoint }}</li>
+                    <li>MTU: {{ settings_form.MTU }}</li>
+                    <li>Network: {{ settings_form.Network }}</li>
+                    <li>DNS: {{ settings_form.DNS }}</li>
+                    <li>Interface: {{ settings_form.Interface }}</li>
+                </ul>
+                <button type="submit" href="#">Save</button>
+            </form>
+            </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

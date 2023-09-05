@@ -1,63 +1,12 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>MikroTik WG WebManager</title>
+    <link rel="icon" type="image" href="{% static '/favicon/icon.ico' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
-<style>
-    .testStyle {
-margin-left: auto;
-margin-right: auto;
-width: 6em
-}
-* {
-    box-sizing: border-box;
-}
-    .navigation{
-        margin: 10px 0px 0px 10px;
-        border-radius: 10px;
-        width: 140px;
-        float: left;
-        height: 140px;
-        background-color: #DCDCDC;
-    }
-    .column {
-        margin-left: 30%;
-        border-radius: 10px;
-        float: left;
-        width: 99%;
-        padding: 10px;
-        margin: 10px 10px 10px 10px;
-        height: 100%;
-}
-    .flex {
-   display: flex;
-   justify-content: space-between;
-}
-    .textcols {
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	width: 100%;
-}
-.textcols-item {
-	display: flex;
-	flex-direction: column;
-	flex-basis: 100%;
-	flex: 1;
-	height: 30%;
-	background: #fff2e1;
-}
-.textcols-item + .textcols-item {
-	margin-left: 5%;
-}
-    th, td {
-  /* Внутренний отступ и размер ячеек */
-  padding: 5px;
-  width: 200px;
-  height: 60px;
-}
-</style>
 
 {% block content %}
 

@@ -25,8 +25,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', views.LoginUser.as_view(), name='login'),
     path('logout/', views.logout_user, name='logout'),
-    path('create/', views.create_client, name='CreateClient'),
-    path('showQR/<str:name>', views.showQR, name='showQR'),
     path('download/<str:name>', views.download, name='download'),
     path('delete/<str:name>', views.delete, name='delete'),
     path('settings/', views.settings, name='settings')
