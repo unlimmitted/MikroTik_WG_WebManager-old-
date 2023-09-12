@@ -4,37 +4,34 @@ from .models import ClientList, Settings
 
 
 class LoginUserForm(AuthenticationForm):
-    username = forms.CharField(label='Логин', widget=forms.TextInput(attrs={'autocomplete': 'someRandomString'}))
-    password = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'autocomplete': 'someRandomString'}))
-
-
-# class ConSettings(forms.Form):
-#     Host = forms.CharField(label='Host', required=False,
-#                                widget=forms.TextInput(attrs={'placeholder': ''}))
-#     Login = forms.CharField(label='Login', required=False, widget=forms.TextInput(attrs={'placeholder': ''}))
-#     Password = forms.CharField(label='Password', required=False,
-#                                widget=forms.TextInput(attrs={'placeholder': ''}))
-#     Endpoint = forms.CharField(label='Endpoint', required=False,
-#                                widget=forms.TextInput(attrs={'placeholder': ''}))
-#     MTU = forms.CharField(label='MTU', required=False, widget=forms.TextInput(attrs={'placeholder': ''}))
-#     Network = forms.CharField(label='Network', required=False,
-#                                    widget=forms.TextInput(attrs={'placeholder': ''}))
-#     DNS = forms.CharField(label='DNS', required=False, widget=forms.TextInput(attrs={'placeholder': ''}))
-#     Interface = forms.CharField(label='Interface', required=False,
-#                                 widget=forms.TextInput(attrs={'placeholder': ''}))
+    username = forms.CharField(label='Логин', widget=forms.TextInput(
+        attrs={'autocomplete': 'someRandomString'}))
+    password = forms.CharField(label='Пароль', widget=forms.PasswordInput(
+        attrs={'autocomplete': 'someRandomString'}))
 
 
 class AddClient(forms.ModelForm):
     class Meta:
         model = ClientList
-        fields = ['name']
+        fields = ['Name']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'name_field', 'id': 'Name',
+            'Name': forms.TextInput(attrs={'class': 'name_field', 'id': 'Name',
                                            'pattern': '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$'})
         }
 
-class ConSettings(forms.ModelForm):
+
+class MTSettings(forms.ModelForm):
     class Meta:
         model = Settings
-        fields = ['Host', 'Username', 'Password',
-        'Endpoint', 'Network', 'Interface', 'MTU', 'DNS']
+        fields = ['host', 'username', 'password',
+                  'server_listen_port', 'server_endpoint',
+                  'server_endpoint_port','client_private_key',
+                  'client_public_key', 'client_endpoint', 
+                  'client_endpoint_port', 'client_preshared_key',
+                  'client_address', 'local_network']
+        widgets = {
+            'password': forms.TextInput(attrs={'type': 'password'}),
+            'client_private_key': forms.TextInput(attrs={'type': 'password'}),
+            'client_preshared_key': forms.TextInput(attrs={'type': 'password'})
+        }
+        

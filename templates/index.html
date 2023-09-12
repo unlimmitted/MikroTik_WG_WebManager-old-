@@ -6,7 +6,7 @@
     <form method="post">
         <div class='create_box'>
         {% csrf_token %}
-        {{ create_client_form.name }}
+        {{ create_client_form.Name }}
         <button class="button" type='submit'>Create</button>
         </div>
     </form>
@@ -17,23 +17,23 @@
         {% for i in objects %}
         <div id='menu'>
             <ul>
-              <li><a class='nav_btn' href="#{{ i.name }}">{{ i.name }}</a></li>
+              <li><a class='nav_btn' href="#{{ i.Name }}">{{ i.Name }}</a></li>
             </ul>
         </div>
         <div id='content'>
-            <div id='{{ i.name }}' class="overlay_content">
+            <div id='{{ i.Name }}' class="overlay_content">
                 <div class='column1'>
-                    <img src="/QR/{{ i.name }}.png" height="500" width="500">
-                    <a class="button" style="padding: 12px 130px;" href="{% url 'download' i.name %}">Download config</a>
-                    <a class="del_button" href="{% url 'delete' i.name %}">Delete</a>
+                    <img src="/QR/{{ i.Name }}.png" height="500" width="500">
+                    <a class="button" style="padding: 12px 130px;" href="{% url 'download' i.Name %}">Download config</a>
+                    <a class="del_button" href="{% url 'delete' i.Name %}">Delete</a>
                 </div>
                 <div class='column2'>
-                    <h2>{{i.name}}</h2>
+                    <h2>{{i.Name}}</h2>
                     <p>[Interface]</p>
                     <p>PrivateKey={{i.PrivateKey}}</p>
                     <p>Address={{ i.Address }}</p>
-                    <p>DNS={{i.DNS}}</p>
-                    <p>MTU={{i.MTU}}</p>
+                    <p>DNS=1.1.1.1</p>
+                    <p>MTU=1400</p>
                     <p></p>
                     <p>[Peer]</p>
                     <p>PublicKey={{i.PublicKey}}</p>
@@ -47,11 +47,11 @@
     </form>
     <div id='menu'>
         <ul>
-            <li><a class="service_btn" href="#showsettings">Settings</a></li>
+            {% comment %} <li><a class="service_btn" href="#showsettings">Settings</a></li> {% endcomment %}
             <li><a class="service_btn" href="{% url 'logout' %}">LogOut</a></li>
         </ul>
     </div>
-    <div id="showsettings" class="overlay">
+    {% comment %} <div id="showsettings" class="overlay">
         <div class="popup">
             <h2>Saved settings:</h2>
             <a class="close" href="#">&times;</a>
@@ -93,5 +93,5 @@
             </div>
             </div>
         </div>
-    </div>
+    </div> {% endcomment %}
 {% endblock %}

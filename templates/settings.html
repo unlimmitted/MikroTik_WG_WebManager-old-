@@ -2,20 +2,29 @@
 
 {% block content %}
 <div class="popup">
-    <h2>Add connection settings:</h2>
+    <h1>Add settings:</h1>
     <div class="content">
     <form method="POST">
         {% csrf_token %}
         <ul style="font-size: 20px">
-            <li>Hostname: {{ settings_form.Host }}</li>
-            <li>Username: {{ settings_form.Username }}</li>
-            <li>Password: {{ settings_form.Password }}</li>
-            <li>Endpoint: {{ settings_form.Endpoint }}</li>
-            <li>MTU: {{ settings_form.MTU }}</li>
-            <li>Network: {{ settings_form.Network }}</li>
-            <li>DNS: {{ settings_form.DNS }}</li>
-            <li>Interface: {{ settings_form.Interface }}</li>
-        </ul>
+            <h2>Connection</h1>
+            <li>Host:{{ settings_form.host }}</li>
+            <li>Username:{{ settings_form.username }}</li>
+            <li>Password:{{ settings_form.password }}</li>
+            <h2>WireGuard in VPN</h2>
+            <li>Listen port:{{ settings_form.server_listen_port }}</li>
+            <li>Endpoint:{{ settings_form.server_endpoint }}</li>
+            <li>Endpoint port:{{ settings_form.server_endpoint_port }}</li>
+            <h2>WireGuard out to VPN</h2>
+            <li>Private key:{{ settings_form.client_private_key }}</li>
+            <li>Address:{{ settings_form.client_address }}</li>
+            <li>Public key:{{ settings_form.client_public_key }}</li>
+            <li>Preshared key:{{ settings_form.client_preshared_key }}</li>
+            <li>Endpoint:{{ settings_form.client_endpoint }}</li>
+            <li>Endpoint port:{{ settings_form.client_endpoint_port }}</li>
+            <h2>Other</h2>
+            <li>Local network:{{ settings_form.local_network }}</li>
+            <h2>{{ error }}</h2>
         <button class="button" type="submit">Save</button>
     </form>
     </div>
