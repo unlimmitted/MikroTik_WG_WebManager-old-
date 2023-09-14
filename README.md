@@ -3,10 +3,11 @@
 ![image](https://github.com/unlimmitted/MikroTik_WG_WebManager/assets/108941648/bd087803-ebe6-4625-9b91-42f7c6e48cf2)
 __Software that will help you bypass VPN WireGuard blocking by mobile operators in Russia.__
 
-To work, you need a virtual machine (or any other option) with a WireGuard server outside Russia. You will need to create 1 config file, it is required to configure the MikroTik virtual machine (more details in the [configuration section](###Configurate-MikroTik)).
+To work, you need a virtual machine (or any other option) with a WireGuard server outside Russia. You will need to create 1 config file, it is required to configure the MikroTik virtual machine (more details in the [configuration section](#configurate-mikrotik)).
 
 
 ## Install
+__Guide on how to screw up mobile operators in Russia :)__
 This section describes in detail the installation and configuration process
 ### StarUp
 Copy repository
