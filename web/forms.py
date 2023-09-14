@@ -25,7 +25,7 @@ class MTSettings(forms.ModelForm):
         model = Settings
         fields = ['host', 'username', 'password',
                   'server_listen_port', 'server_endpoint',
-                  'server_endpoint_port','client_private_key',
+                  'client_private_key',
                   'client_public_key', 'client_endpoint', 
                   'client_endpoint_port', 'client_preshared_key',
                   'client_address', 'local_network']

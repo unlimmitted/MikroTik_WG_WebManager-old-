@@ -1,30 +1,113 @@
 {% extends 'base.html' %}
 
 {% block content %}
+{% load static %}
 <div class="popup">
-    <h1>Add settings:</h1>
+    <h1 align="center">Add settings</h1>
     <div class="content">
     <form method="POST">
         {% csrf_token %}
-        <ul style="font-size: 20px">
-            <h2>Connection</h1>
-            <li>Host:{{ settings_form.host }}</li>
-            <li>Username:{{ settings_form.username }}</li>
-            <li>Password:{{ settings_form.password }}</li>
-            <h2>WireGuard in VPN</h2>
-            <li>Listen port:{{ settings_form.server_listen_port }}</li>
-            <li>Endpoint:{{ settings_form.server_endpoint }}</li>
-            <li>Endpoint port:{{ settings_form.server_endpoint_port }}</li>
-            <h2>WireGuard out to VPN</h2>
-            <li>Private key:{{ settings_form.client_private_key }}</li>
-            <li>Address:{{ settings_form.client_address }}</li>
-            <li>Public key:{{ settings_form.client_public_key }}</li>
-            <li>Preshared key:{{ settings_form.client_preshared_key }}</li>
-            <li>Endpoint:{{ settings_form.client_endpoint }}</li>
-            <li>Endpoint port:{{ settings_form.client_endpoint_port }}</li>
-            <h2>Other</h2>
-            <li>Local network:{{ settings_form.local_network }}</li>
-            <h2>{{ error }}</h2>
+        <h2 align="center">Connection</h1>
+        <div class='row' style="font-size: 20px">
+            <div class='columns' align="right">
+                Host:
+            </div>
+            <div class='columns'>
+                {{ settings_form.host }}
+            </div>
+        </div>
+        <div class='row' style="font-size: 20px">
+            <div class='columns' align="right">
+                Username:
+            </div>
+            <div class='columns'>
+                {{ settings_form.username }}
+            </div>
+        </div>
+        <div class='row' style="font-size: 20px">
+            <div class='columns' align="right">
+                Password:
+            </div>
+            <div class='columns'>
+                {{ settings_form.password }}
+            </div>
+        </div>
+        <h2 align="center">WireGuard in VPN</h2>
+        <div class='row' style="font-size: 20px">
+            <div class='columns' align="right">
+                Listen port:
+            </div>
+            <div class='columns'>
+                {{ settings_form.server_listen_port }}
+            </div>
+        </div>
+        <div class='row' style="font-size: 20px">
+            <div class='columns' align="right">
+                Endpoint:
+            </div>
+            <div class='columns'>
+                {{ settings_form.server_endpoint }}
+            </div>
+        </div>
+        <h2 align="center">WireGuard out to VPN</h2>
+        <div class='row' style="font-size: 20px">
+            <div class='columns' align="right">
+                Private key:
+            </div>
+            <div class='columns'>
+                {{ settings_form.client_private_key }}
+            </div>
+        </div>
+        <div class='row' style="font-size: 20px">
+            <div class='columns' align="right">
+                Address:
+            </div>
+            <div class='columns'>
+                {{ settings_form.client_address }}
+            </div>
+        </div> 
+        <div class='row' style="font-size: 20px">
+            <div class='columns' align="right">
+                Public key:
+            </div>
+            <div class='columns'>
+                {{ settings_form.client_public_key }}
+            </div>
+        </div> 
+        <div class='row' style="font-size: 20px">
+            <div class='columns' align="right">
+                Preshared key:
+            </div>
+            <div class='columns'>
+                {{ settings_form.client_preshared_key }}
+            </div>
+        </div> 
+        <div class='row' style="font-size: 20px">
+            <div class='columns' align="right">
+                Endpoint:
+            </div>
+            <div class='columns'>
+                {{ settings_form.client_endpoint }}
+            </div>
+        </div> 
+        <div class='row' style="font-size: 20px">
+            <div class='columns' align="right">
+                Endpoint port:
+            </div>
+            <div class='columns'>
+                {{ settings_form.client_endpoint_port }}
+            </div>
+        </div>
+        <h2 align="center">Other</h2>        
+        <div class='row' style="font-size: 20px">
+            <div class='columns' align="right">
+                Local network:
+            </div>
+            <div class='columns'>
+                {{ settings_form.local_network }}
+            </div>
+        </div>
+        <h2>{{ error }}</h2>
         <button class="button" type="submit">Save</button>
     </form>
     </div>

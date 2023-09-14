@@ -33,7 +33,8 @@ li {
     list-style-type: none;
     /* Убираем маркеры */
 }
-.create_box{
+
+.create_box {
     border-radius: 6px;
     border-color: #FF4742;
     width: 1700px;
@@ -370,6 +371,25 @@ a.style {
 .popup .content {
     max-height: 30%;
     overflow: auto;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 70%;
+}
+
+.columns {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 70%;
+    flex: 1;
+}
+
+.box1 {
+    display: flex;
+    flex-wrap: row wrap;
 }
 
 @media screen and (max-width: 700px) {

@@ -38,7 +38,6 @@ class Settings(models.Model):
     server_listen_port = models.CharField(max_length=10, verbose_name='server_listen_port')
     # Server peers properties
     server_endpoint = models.CharField(max_length=40, verbose_name='server_endpoint')
-    server_endpoint_port = models.CharField(max_length=10, verbose_name='server_endpoint_port') 
     server_network = models.CharField(max_length=40, verbose_name='server_network')
     # Client interface
     client_interface_name = models.CharField(max_length=25, verbose_name='client_interface_name')
