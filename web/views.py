@@ -34,7 +34,7 @@ class Validation:
             connect.get_api()
         except routeros_api.exceptions.RouterOsApiConnectionError:
             return 'Connection error, check the correctness of the data in the connection form'
-        except routeros_api.exceptions.RouterOsApiCommunicationError as Error:
+        except routeros_api.exceptions.RouterOsApiCommunicationError:
             return 'Authorization error, check the correctness of the data in the connection form'
 
     def validate_form_data(self):
