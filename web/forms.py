@@ -4,7 +4,8 @@ from .models import ClientList, Settings
 
 
 class LoginUserForm(AuthenticationForm):
-    username = forms.CharField(label='Логин', widget=forms.TextInput(
+    username = forms.CharField(error_messages={'required': 'Please enter your name'},
+                                label='Логин', widget=forms.TextInput(
         attrs={'autocomplete': 'someRandomString'}))
     password = forms.CharField(label='Пароль', widget=forms.PasswordInput(
         attrs={'autocomplete': 'someRandomString'}))
@@ -30,8 +31,16 @@ class MTSettings(forms.ModelForm):
                   'client_endpoint_port', 'client_preshared_key',
                   'client_address', 'local_network']
         widgets = {
+            'host': forms.TextInput(attrs={'placeholder': '0.0.0.0'}),
+            'username': forms.TextInput(attrs={'placeholder': 'admin'}),
             'password': forms.TextInput(attrs={'type': 'password'}),
+            'server_listen_port': forms.TextInput(attrs={'placeholder': '12038'}),
+            'server_endpoint': forms.TextInput(attrs={'placeholder': '0.0.0.0'}),
             'client_private_key': forms.TextInput(attrs={'type': 'password'}),
+            'client_endpoint': forms.TextInput(attrs={'placeholder': '0.0.0.0'}),
+            'client_endpoint_port': forms.TextInput(attrs={'placeholder': '51820'}),
+            'client_address': forms.TextInput(attrs={'placeholder': '0.0.0.0/0'}),
+            'local_network': forms.TextInput(attrs={'placeholder': '0.0.0.0/0'}),
             'client_preshared_key': forms.TextInput(attrs={'type': 'password'})
         }
         

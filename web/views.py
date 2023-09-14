@@ -13,7 +13,45 @@ from web.forms import *
 from web.utils import DataMixin
 from django.views.generic import ListView
 from .models import *
+import re
 
+
+class Validation:
+    def __init__(self, form) -> None:
+        self.host = form.cleaned_data.get('host')
+        self.username = form.cleaned_data.get('username')
+        self.password = form.cleaned_data.get('password')
+        self.address = form.cleaned_data.get('client_address')
+        self.local_network = form.cleaned_data.get('local_network')
+
+    def check_connection(self):
+        try:
+            connect = routeros_api.RouterOsApiPool(
+            host=self.host,
+            username=self.username,
+            password=self.password,
+            plaintext_login=True)
+            connect.get_api()
+        except routeros_api.exceptions.RouterOsApiConnectionError:
+            return 'Connection error, check the correctness of the data in the connection form'
+        except routeros_api.exceptions.RouterOsApiCommunicationError as Error:
+            return 'Authorization error, check the correctness of the data in the connection form'
+
+    def validate_form_data(self):
+        error = []
+        if bool(re.match(r"[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\/[0-9]{2}", self.address)) is False:
+            error.append('Error, check the "Host" field is correct')
+        if bool(re.match(r"[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\/[0-9]{2}", self.local_network)) is False:
+            error.append('Error, check that the "Local network" field is correct')
+        return error
+
+    def run(self):
+        conn_error = self.check_connection()
+        form_error = self.validate_form_data()
+        if conn_error or form_error:
+            return conn_error, form_error
+        else:
+            return None
 
 class Configurator:
     def __init__(self ,options, settings_form):
@@ -63,7 +101,7 @@ class Configurator:
         interfaces.add(
             name=self.server_interface_name,
             mtu=self.server_mtu,
-            listen_port=self.server_listen_port)
+            listen_port=str(self.server_listen_port))
         interfaces.add(
             name=self.client_interface_name,
             mtu=self.client_mtu,
@@ -75,7 +113,7 @@ class Configurator:
             interface=self.client_interface_name,
             public_key=self.client_public_key,
             endpoint_address=self.endpoint,
-            endpoint_port=self.endpoint_port,
+            endpoint_port=str(self.endpoint_port),
             allowed_address='0.0.0.0/0',
             preshared_key=self.client_preshared_key,
             persistent_keepalive=self.persistent_keep_alive
@@ -240,7 +278,7 @@ class MikroTik:
             PublicKey = {self.get_server_public_key()}
             AllowedIPs = 0.0.0.0/0
             Endpoint = {self.get_all_options().server_endpoint + ':'
-                        + self.get_all_options().server_listen_port}
+                        + str(self.get_all_options().server_listen_port)}
             PersistentKeepalive = 30
             """
 
@@ -286,23 +324,15 @@ def dashboard(request):
     if Settings.objects.all():
         create_client_form = AddClient(request.POST)
         objects = ClientList.objects.all()
-        # settings_form = MTSettings(request.POST)
+        page_context = {'create_client_form': create_client_form, 'objects': objects}
         if create_client_form.is_valid():
             name = create_client_form.cleaned_data.get('Name')
             interaction = MikroTik(name)
-            interaction.create_client(create_client_form)
-            return redirect('home')
+            page_context = {'create_client_form': create_client_form, 'objects': objects,
+                             'feedback': interaction.create_client(create_client_form)}
+            return render(request, 'index.html', page_context)
 
-        # if settings_form.is_valid():
-        #     Settings.save_settings(settings_form)
-
-        # option = MikroTik().get_all_options()
-        # 'Allowed_addr': option.Network,
-        #                 'Hostname': option.Host, 'Login': option.Username,
-        #                 'Password': option.Password, 'DNS': option.DNS,
-        #                 'MTU': option.MTU, 'Interface': option.Interface,
-        #                 'Endpoint': option.Endpoint, 'objects': objects,
-        page_context = {'create_client_form': create_client_form, 'objects': objects}
+        
         return render(request, 'index.html', page_context)
     else:
         return redirect('settings')
@@ -313,15 +343,16 @@ def settings(request):
     settings_form = MTSettings(request.POST)
     page_context = {'settings_form': settings_form}
     if settings_form.is_valid():
-        check = Settings.check_connection(settings_form)
-        if check is True:
+        check = Validation(settings_form)
+        errors = check.run()
+        if errors is None:
             Settings.save_settings(settings_form)
             options = Settings.objects.all()[0]
             configurator = Configurator(options ,settings_form)
             configurator.run()
             return redirect('home')
         else:
-            page_context = {'settings_form': settings_form, 'error': check}
+            page_context = {'settings_form': settings_form, 'conn_error': errors[0], 'form_error': errors[1]}
             return render(request, 'settings.html', context=page_context)
     return render(request, 'settings.html', context=page_context)
 

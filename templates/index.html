@@ -6,6 +6,7 @@
     <form method="post">
         <div class='create_box'>
         {% csrf_token %}
+        {% if feedback %}<p style="font-size: 16px"><font color="white">{{ feedback }}</p>{% endif %}
         {{ create_client_form.Name }}
         <button class="button" type='submit'>Create</button>
         </div>
@@ -47,51 +48,7 @@
     </form>
     <div id='menu'>
         <ul>
-            {% comment %} <li><a class="service_btn" href="#showsettings">Settings</a></li> {% endcomment %}
             <li><a class="service_btn" href="{% url 'logout' %}">LogOut</a></li>
         </ul>
     </div>
-    {% comment %} <div id="showsettings" class="overlay">
-        <div class="popup">
-            <h2>Saved settings:</h2>
-            <a class="close" href="#">&times;</a>
-            <div class="content">
-            <ul style="font-size: 20px">
-                <li>Hostname: {{ Hostname }}</li>
-                <li>Username: {{ Login }}</li>
-                <li>Password: {{ Password }}</li>
-                <li>Endpoint: {{ Endpoint }}</li>
-                <li>MTU: {{ MTU }}</li>
-                <li>Network: {{ Allowed_addr }}</li>
-                <li>DNS: {{ DNS }}</li>
-                <li>Interface: {{ Interface }}</li>
-            </ul>
-            <a style="color: black; font-size: 22px" href="#settings-form">Edit</a>
-            </div>
-            </div>
-        </div>
-    </div>
-    <div id="settings-form" class="overlay">
-        <div class="popup">
-            <h2>Edit settings:</h2>
-            <a class="close" href="#showsettings">&times;</a>
-            <div class="content">
-            <form method="POST">
-                {% csrf_token %}
-                <ul style="font-size: 20px">
-                    <li>Hostname: {{ settings_form.Host }}</li>
-                    <li>Username: {{ settings_form.Username }}</li>
-                    <li>Password: {{ settings_form.Password }}</li>
-                    <li>Endpoint: {{ settings_form.Endpoint }}</li>
-                    <li>MTU: {{ settings_form.MTU }}</li>
-                    <li>Network: {{ settings_form.Network }}</li>
-                    <li>DNS: {{ settings_form.DNS }}</li>
-                    <li>Interface: {{ settings_form.Interface }}</li>
-                </ul>
-                <button type="submit" href="#">Save</button>
-            </form>
-            </div>
-            </div>
-        </div>
-    </div> {% endcomment %}
 {% endblock %}

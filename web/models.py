@@ -18,7 +18,7 @@ class ClientList(models.Model):
         settings = Settings.objects.all()[0]
         if form.is_valid():
             add_client_info = form.save(commit=False)
-            add_client_info.Endpoint = settings.server_endpoint + ':' + settings.server_listen_port
+            add_client_info.Endpoint = settings.server_endpoint + ':' + str(settings.server_listen_port)
             add_client_info.DNS = '1.1.1.1'
             add_client_info.MTU = '1400'
             add_client_info.Address = ip
@@ -35,7 +35,7 @@ class Settings(models.Model):
     password = models.CharField(max_length=255, verbose_name='Password')
     # WG server properties
     server_interface = models.CharField(max_length=15, verbose_name='server_interface')
-    server_listen_port = models.CharField(max_length=10, verbose_name='server_listen_port')
+    server_listen_port = models.IntegerField(verbose_name='server_listen_port')
     # Server peers properties
     server_endpoint = models.CharField(max_length=40, verbose_name='server_endpoint')
     server_network = models.CharField(max_length=40, verbose_name='server_network')
@@ -45,54 +45,14 @@ class Settings(models.Model):
     # Client peer
     client_public_key = models.CharField(max_length=150, verbose_name='client_public_key')
     client_endpoint = models.CharField(max_length=40, verbose_name='client_endpoint')
-    client_endpoint_port = models.CharField(max_length=10, verbose_name='client_endpoint_port')
+    client_endpoint_port = models.IntegerField(verbose_name='client_endpoint_port')
     client_preshared_key = models.CharField(max_length=150, verbose_name='client_preshared_key')
     client_address = models.CharField(max_length=40, verbose_name='client_address')
     # Other properties
     local_network = models.CharField(max_length=40, verbose_name='local_network')
 
     @staticmethod
-    def check_connection(form):
-        try:
-            connect = routeros_api.RouterOsApiPool(
-            host=form.cleaned_data.get('host'),
-            username=form.cleaned_data.get('username'),
-            password=form.cleaned_data.get('password'),
-            plaintext_login=True)
-            con = connect.get_api()
-            return True
-        except routeros_api.exceptions.RouterOsApiCommunicationError as Error:
-            return Error
-
-
-    @staticmethod
     def save_settings(form):
-        # settings = Settings.objects.all()
-        # if settings:
-        #     Settings.objects.filter(host=settings[0].host).update(
-        #         host = form.cleaned_data.get('host'),
-        #         username = form.cleaned_data.get('username'),
-        #         password = form.cleaned_data.get('password'),
-
-        #         server_interface = form.cleaned_data.get('server_interface'),
-        #         server_listen_port = form.cleaned_data.get('server_listen_port'),
-        #         server_endpoint = form.cleaned_data.get('server_endpoint'),
-        #         server_endpoint_port = form.cleaned_data.get('server_endpoint_port'),
-
-        #         server_network = form.cleaned_data.get('server_network'),
-
-        #         client_interface_name = form.cleaned_data.get('client_interface_name'),
-        #         client_private_key = form.cleaned_data.get('client_private_key'),
-
-        #         client_public_key = form.cleaned_data.get('client_public_key'),
-        #         client_endpoint = form.cleaned_data.get('client_endpoint'),
-        #         client_endpoint_port = form.cleaned_data.get('client_endpoint_port'),
-        #         client_preshared_key = form.cleaned_data.get('client_preshared_key'),
-        #         client_address = form.cleaned_data.get('client_address'),
-
-        #         local_network = form.cleaned_data.get('local_network')
-        #     )
-        # else:
         if form.is_valid():
             property = form.save(commit=False)
             property.server_interface = 'wg-in'
