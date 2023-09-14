@@ -8,7 +8,9 @@ To work, you need a virtual machine (or any other option) with a WireGuard serve
 
 ## Install
 __Guide on how to screw up mobile operators in Russia :)__
+
 This section describes in detail the installation and configuration process
+
 ### StarUp
 Copy repository
 ```cpp
