@@ -7,7 +7,7 @@
     <div class="content">
     <form method="POST">
         {% csrf_token %}
-        <h2 align="center">Connection</h1>
+        <h1 align="center">Connection</h1>
         <div class='row' style="font-size: 20px">
             <div class='columns' align="right">
                 Host:
@@ -65,7 +65,7 @@
             <div class='columns'>
                 {{ settings_form.client_address }}
             </div>
-        </div> 
+        </div>
         <div class='row' style="font-size: 20px">
             <div class='columns' align="right">
                 Public key:
@@ -73,7 +73,7 @@
             <div class='columns'>
                 {{ settings_form.client_public_key }}
             </div>
-        </div> 
+        </div>
         <div class='row' style="font-size: 20px">
             <div class='columns' align="right">
                 Preshared key:
@@ -81,7 +81,7 @@
             <div class='columns'>
                 {{ settings_form.client_preshared_key }}
             </div>
-        </div> 
+        </div>
         <div class='row' style="font-size: 20px">
             <div class='columns' align="right">
                 Endpoint:
@@ -89,7 +89,7 @@
             <div class='columns'>
                 {{ settings_form.client_endpoint }}
             </div>
-        </div> 
+        </div>
         <div class='row' style="font-size: 20px">
             <div class='columns' align="right">
                 Endpoint port:
@@ -98,7 +98,7 @@
                 {{ settings_form.client_endpoint_port }}
             </div>
         </div>
-        <h2 align="center">Other</h2>        
+        <h2 align="center">Other</h2>
         <div class='row' style="font-size: 20px">
             <div class='columns' align="right">
                 Local network:

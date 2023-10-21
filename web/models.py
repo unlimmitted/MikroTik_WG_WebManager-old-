@@ -1,5 +1,7 @@
 from django.db import models
 import routeros_api
+
+
 # Create your models here.
 class ClientList(models.Model):
     Name = models.CharField(max_length=35, verbose_name='Name')
@@ -12,7 +14,7 @@ class ClientList(models.Model):
     Endpoint = models.CharField(max_length=255, verbose_name='Endpoint')
     PersistentKeepalive = models.CharField(
         max_length=255, verbose_name='PersistentKeepalive')
-    
+
     @staticmethod
     def save_settings(form, client_key, ip):
         settings = Settings.objects.all()[0]
@@ -27,6 +29,7 @@ class ClientList(models.Model):
             add_client_info.PublicKey = str(client_key.pubkey)
             add_client_info.PersistentKeepalive = '30'
             add_client_info.save()
+
 
 class Settings(models.Model):
     # Connection properties

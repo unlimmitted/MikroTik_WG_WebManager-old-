@@ -21,13 +21,13 @@ from MikroTik_WG_WebManager import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('', views.dashboard, name='home'),
-    path('admin/', admin.site.urls),
-    path('login/', views.LoginUser.as_view(), name='login'),
-    path('logout/', views.logout_user, name='logout'),
-    path('download/<str:name>', views.download, name='download'),
-    path('delete/<str:name>', views.delete, name='delete'),
-    path('settings/', views.settings, name='settings')
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+                  path('', views.dashboard, name='home'),
+                  path('admin/', admin.site.urls),
+                  path('login/', views.LoginUser.as_view(), name='login'),
+                  path('logout/', views.logout_user, name='logout'),
+                  path('download/<str:name>', views.download, name='download'),
+                  path('delete/<str:name>', views.delete, name='delete'),
+                  path('settings/', views.settings, name='settings')
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += staticfiles_urlpatterns()

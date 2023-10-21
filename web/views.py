@@ -1,17 +1,14 @@
 import os
 import pywgkey
 import qrcode
-import routeros_api
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.http import FileResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.http import JsonResponse
 from web.forms import *
 from web.utils import DataMixin
-from django.views.generic import ListView
 from .models import *
 import re
 
@@ -27,10 +24,10 @@ class Validation:
     def check_connection(self):
         try:
             connect = routeros_api.RouterOsApiPool(
-            host=self.host,
-            username=self.username,
-            password=self.password,
-            plaintext_login=True)
+                host=self.host,
+                username=self.username,
+                password=self.password,
+                plaintext_login=True)
             connect.get_api()
         except routeros_api.exceptions.RouterOsApiConnectionError:
             return 'Connection error, check the correctness of the data in the connection form'
@@ -42,7 +39,8 @@ class Validation:
         if bool(re.match(r"[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\/[0-9]{2}", self.address)) is False:
             error.append('Error, check the "Host" field is correct')
         if bool(re.match(r"[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\/[0-9]{2}", self.local_network)) is False:
-            error.append('Error, check that the "Local network" field is correct')
+            error.append(
+                'Error, check that the "Local network" field is correct')
         return error
 
     def run(self):
@@ -53,8 +51,9 @@ class Validation:
         else:
             return None
 
+
 class Configurator:
-    def __init__(self ,options, settings_form):
+    def __init__(self, options, settings_form):
         self.service_client_key = pywgkey.WgKey()
 
         # Connection properties
@@ -65,26 +64,31 @@ class Configurator:
         self.server_interface_name = options.server_interface
         self.server_mtu = '1420'
         self.server_network = options.server_network
-        self.server_listen_port = settings_form.cleaned_data.get('server_listen_port')
+        self.server_listen_port = settings_form.cleaned_data.get(
+            'server_listen_port')
         # Client Interface properties
         self.client_interface_name = options.client_interface_name
         self.client_mtu = '1280'
-        self.client_private_key = settings_form.cleaned_data.get('client_private_key')
+        self.client_private_key = settings_form.cleaned_data.get(
+            'client_private_key')
         # Client Peer properties
-        self.client_public_key = settings_form.cleaned_data.get('client_public_key')
+        self.client_public_key = settings_form.cleaned_data.get(
+            'client_public_key')
         self.endpoint = settings_form.cleaned_data.get('client_endpoint')
-        self.endpoint_port = settings_form.cleaned_data.get('client_endpoint_port')
-        self.client_preshared_key = settings_form.cleaned_data.get('client_preshared_key')
+        self.endpoint_port = settings_form.cleaned_data.get(
+            'client_endpoint_port')
+        self.client_preshared_key = settings_form.cleaned_data.get(
+            'client_preshared_key')
         self.persistent_keep_alive = '00:00:20'
         # Other client properties
         self.client_address = settings_form.cleaned_data.get('client_address')
 
         self.local_network = settings_form.cleaned_data.get('local_network')
 
-        self.connection()
+        self.__connection()
 
     # Connect to MikroTik
-    def connection(self):
+    def __connection(self):
         try:
             connect = routeros_api.RouterOsApiPool(
                 host=self.host,
@@ -96,7 +100,7 @@ class Configurator:
         except:
             return False
 
-    def create_interfaces(self):
+    def __create_interfaces(self):
         interfaces = self.api.get_resource('/interface/wireguard')
         interfaces.add(
             name=self.server_interface_name,
@@ -107,7 +111,7 @@ class Configurator:
             mtu=self.client_mtu,
             private_key=self.client_private_key)
 
-    def create_client_peer(self):
+    def __create_client_peer(self):
         client_peer = self.api.get_resource('/interface/wireguard/peers')
         client_peer.add(
             interface=self.client_interface_name,
@@ -119,7 +123,7 @@ class Configurator:
             persistent_keepalive=self.persistent_keep_alive
         )
 
-    def create_service_server_peer(self):
+    def __create_service_server_peer(self):
         server_peer = self.api.get_resource('/interface/wireguard/peers')
         server_peer.add(
             interface=self.server_interface_name,
@@ -129,7 +133,7 @@ class Configurator:
             persistent_keepalive=self.persistent_keep_alive
         )
 
-    def create_routing_table(self):
+    def __create_routing_table(self):
         routing = self.api.get_resource('/routing/table')
         routing.add(
             disabled='no',
@@ -137,7 +141,7 @@ class Configurator:
             name='toVpn'
         )
 
-    def create_ip_rules(self):
+    def __create_ip_rules(self):
         ip_addresses = self.api.get_resource('/ip/address')
         # Server network
         ip_addresses.add(
@@ -210,15 +214,18 @@ class Configurator:
         )
 
     def run(self):
-        self.create_interfaces()
-        self.create_client_peer()
-        self.create_service_server_peer()
-        self.create_routing_table()
-        self.create_ip_rules()
+        self.__create_interfaces()
+        self.__create_client_peer()
+        self.__create_service_server_peer()
+        self.__create_routing_table()
+        self.__create_ip_rules()
 
 
 class MikroTik:
     def __init__(self, name=1):
+        self.new_ip = None
+        self.client_key = None
+        self.mt_api = None
         self.name = name
         self.connection()
 
@@ -226,26 +233,26 @@ class MikroTik:
         return Settings.objects.all()[0]
 
     def connection(self):
-        сonnection = routeros_api.RouterOsApiPool(
+        mt_connection = routeros_api.RouterOsApiPool(
             host=self.get_all_options().host,
             username=self.get_all_options().username,
             password=self.get_all_options().password,
             plaintext_login=True)
-        self.api = сonnection.get_api()
-        return self.api
+        self.mt_api = mt_connection.get_api()
 
     def get_server_public_key(self):
-        return self.api.get_resource('/interface/wireguard').get(name=self.get_all_options().server_interface)[0].get('public-key')
+        return self.mt_api.get_resource('/interface/wireguard').get(
+            name=self.get_all_options().server_interface)[0].get('public-key')
 
     def get_max_ip(self):
-        list_get = self.api.get_resource(
+        list_get = self.mt_api.get_resource(
             '/interface/wireguard/peers').get(interface=self.get_all_options().server_interface)
         nums = [str(d['allowed-address']).split('.')[3] for d in list_get]
         max_ip = max([int(str(el[0:el.index('/')])) for el in nums])
         return max_ip + 1
 
     def create_client(self, form):
-        get_client_name = self.api.get_resource(
+        get_client_name = self.mt_api.get_resource(
             '/interface/wireguard/peers').get(comment=self.name)
 
         if get_client_name:
@@ -253,13 +260,13 @@ class MikroTik:
         else:
             self.client_key = pywgkey.WgKey()
             wg_network = self.get_all_options().server_network
-            formating_network = (wg_network.split('/')[0])[:-1]
-            self.new_ip = formating_network + str(self.get_max_ip()) + '/' + \
+            formatting_network = (wg_network.split('/')[0])[:-1]
+            self.new_ip = formatting_network + str(self.get_max_ip()) + '/' + \
                 (wg_network.split('/'))[1]
 
             ClientList.save_settings(form, self.client_key, self.new_ip)
 
-            peers = self.api.get_resource('/interface/wireguard/peers')
+            peers = self.mt_api.get_resource('/interface/wireguard/peers')
             peers.add(
                 interface=self.get_all_options().server_interface,
                 comment=f"{self.name}",
@@ -282,8 +289,8 @@ class MikroTik:
             PersistentKeepalive = 30
             """
 
-            QR = qrcode.make(template)
-            QR.save(f"web/QR/{self.name}.png")
+            qr = qrcode.make(template)
+            qr.save(f"web/QR/{self.name}.png")
 
             file = open(f"web/configs/{self.name}.conf", "w")
             file.write(template)
@@ -292,17 +299,17 @@ class MikroTik:
             return 'Client created'
 
     def delete_client(self):
-        list_get = self.api.get_resource('/interface/wireguard/peers')
+        list_get = self.mt_api.get_resource('/interface/wireguard/peers')
         get_id = list_get.get(comment=self.name)[0].get('id')
         list_get.remove(id=get_id)
         config_path = os.path.join(os.path.abspath(os.path.dirname(__file__)),
-                                   fr'configs\{self.name}.conf')
-        QR_path = os.path.join(os.path.abspath(os.path.dirname(__file__)),
-                               fr'QR\{self.name}.png')
+                                   fr"web/configs/{self.name}.conf")
+        qr_path = os.path.join(os.path.abspath(os.path.dirname(__file__)),
+                               fr'web/QR/{self.name}.png')
         os.remove(config_path)
-        os.remove(QR_path)
-        model = ClientList.objects.get(Name=self.name)
-        model.delete()
+        os.remove(qr_path)
+        client_record = ClientList.objects.get(Name=self.name)
+        client_record.delete()
 
 
 # Page views \/
@@ -324,15 +331,14 @@ def dashboard(request):
     if Settings.objects.all():
         create_client_form = AddClient(request.POST)
         objects = ClientList.objects.all()
-        page_context = {'create_client_form': create_client_form, 'objects': objects}
+        page_context = {
+            'create_client_form': create_client_form, 'objects': objects}
         if create_client_form.is_valid():
             name = create_client_form.cleaned_data.get('Name')
             interaction = MikroTik(name)
             page_context = {'create_client_form': create_client_form, 'objects': objects,
-                             'feedback': interaction.create_client(create_client_form)}
+                            'feedback': interaction.create_client(create_client_form)}
             return render(request, 'index.html', page_context)
-
-        
         return render(request, 'index.html', page_context)
     else:
         return redirect('settings')
@@ -348,7 +354,7 @@ def settings(request):
         if errors is None:
             Settings.save_settings(settings_form)
             options = Settings.objects.all()[0]
-            configurator = Configurator(options ,settings_form)
+            configurator = Configurator(options, settings_form)
             configurator.run()
             return redirect('home')
         else:
