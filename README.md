@@ -22,12 +22,14 @@ __Run in ~/MikroTik_WG_WebManager__
 sudo docker-compose build
 ```
 ```cpp
-python manage.py createsuperuser 
-```
-```cpp
 sudo docker-compose up -d
 ```
+
 Now the web interface is available at http://0.0.0.0:8000
+
+__Login:__ admin 
+
+__Password:__ admin
 
 ### Configurate MikroTik
 Before going to the web interface, connect to MikroTik using __WinBox__ and enable __DHCP Client__ to get the __IP Address__ which you will need later.
