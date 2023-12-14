@@ -1,4 +1,7 @@
 # WireGuard on MikroTik Web Manager
+
+New: https://github.com/unlimmitted/MTWireGuardEasy
+
 ## Description
 ![image](https://github.com/unlimmitted/MikroTik_WG_WebManager/assets/108941648/bd087803-ebe6-4625-9b91-42f7c6e48cf2)
 __Software that will help you bypass VPN WireGuard blocking by mobile operators in Russia.__
